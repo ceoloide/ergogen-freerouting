@@ -5,4 +5,6 @@ if [ -d node_modules ]; then
   docker push ceoloide/ergogen-freerouting:${ERGOGEN_VERSION}_${FREEROUTING_VERSION}
   docker tag ceoloide/ergogen-freerouting:${ERGOGEN_VERSION}_${FREEROUTING_VERSION} ceoloide/ergogen-freerouting:latest
   docker push ceoloide/ergogen-freerouting:latest
+else
+  echo "Please run 'npm install' first."
 fi
