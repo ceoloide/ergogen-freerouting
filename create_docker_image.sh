@@ -1,5 +1,5 @@
 ERGOGEN_VERSION=4.1.0
-FREEROUTING_VERSION=2.0.1
+FREEROUTING_VERSION=2.1.0
 if [ -d node_modules ]; then
   docker build . -t ceoloide/ergogen-freerouting:${ERGOGEN_VERSION}_${FREEROUTING_VERSION}
   docker push ceoloide/ergogen-freerouting:${ERGOGEN_VERSION}_${FREEROUTING_VERSION}
