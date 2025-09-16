@@ -3,6 +3,10 @@ name: Manual Docker Build
 on:
   workflow_dispatch:
     inputs:
+      kicad-version:
+        description: 'KiCad Version'
+        default: '8'
+        required: false
       ergogen-stable-version:
         description: 'Ergogen Stable Version'
         default: '4.1.0'
@@ -37,6 +41,7 @@ jobs:
         run: |
           chmod +x create_docker_image.sh
           ./create_docker_image.sh \
+            --kicad-version=${{ github.event.inputs.kicad-version }} \
             --ergogen-stable-version=${{ github.event.inputs.ergogen-stable-version }} \
             --ergogen-snapshot-url=${{ github.event.inputs.ergogen-snapshot-url }} \
             --freerouting-stable-version=${{ github.event.inputs.freerouting-stable-version }} \
