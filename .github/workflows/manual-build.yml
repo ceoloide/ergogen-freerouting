@@ -1,0 +1,43 @@
+name: Manual Docker Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      ergogen-stable-version:
+        description: 'Ergogen Stable Version'
+        default: '4.1.0'
+        required: false
+      ergogen-snapshot-url:
+        description: 'Ergogen Snapshot URL'
+        default: 'https://github.com/ergogen/ergogen#develop'
+        required: false
+      freerouting-stable-version:
+        description: 'Freerouting Stable Version'
+        default: '2.1.0'
+        required: false
+      freerouting-snapshot-url:
+        description: 'Freerouting Snapshot URL'
+        default: 'https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20250916_121300.jar'
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Run docker build script
+        run: |
+          chmod +x create_docker_image.sh
+          ./create_docker_image.sh \
+            --ergogen-stable-version=${{ github.event.inputs.ergogen-stable-version }} \
+            --ergogen-snapshot-url=${{ github.event.inputs.ergogen-snapshot-url }} \
+            --freerouting-stable-version=${{ github.event.inputs.freerouting-stable-version }} \
+            --freerouting-snapshot-url=${{ github.event.inputs.freerouting-snapshot-url }}
