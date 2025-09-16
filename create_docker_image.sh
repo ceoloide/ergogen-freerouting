@@ -13,7 +13,34 @@ get_snapshot_url() {
 ERGOGEN_STABLE_VERSION="4.1.0"
 ERGOGEN_SNAPSHOT_URL="https://github.com/ergogen/ergogen#develop"
 FREEROUTING_STABLE_VERSION="2.1.0"
-FREEROUTING_SNAPSHOT_URL=$(get_snapshot_url)
+FREEROUTING_SNAPSHOT_URL=""
+
+# Parse command-line arguments
+for arg in "$@"
+do
+    case $arg in
+        --ergogen-stable-version=*)
+        ERGOGEN_STABLE_VERSION="${arg#*=}"
+        shift
+        ;;
+        --ergogen-snapshot-url=*)
+        ERGOGEN_SNAPSHOT_URL="${arg#*=}"
+        shift
+        ;;
+        --freerouting-stable-version=*)
+        FREEROUTING_STABLE_VERSION="${arg#*=}"
+        shift
+        ;;
+        --freerouting-snapshot-url=*)
+        FREEROUTING_SNAPSHOT_URL="${arg#*=}"
+        shift
+        ;;
+    esac
+done
+
+if [ -z "${FREEROUTING_SNAPSHOT_URL}" ]; then
+  FREEROUTING_SNAPSHOT_URL=$(get_snapshot_url)
+fi
 
 if [ ! -f Dockerfile ]; then
   echo "Dockerfile not found in the folder."
