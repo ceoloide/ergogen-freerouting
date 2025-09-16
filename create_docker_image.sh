@@ -17,30 +17,25 @@ FREEROUTING_STABLE_VERSION="2.1.0"
 FREEROUTING_SNAPSHOT_URL=""
 
 # Parse command-line arguments
-for arg in "$@"
-do
-    case $arg in
-        --kicad-version=*)
-        KICAD_VERSION="${arg#*=}"
-        shift
-        ;;
-        --ergogen-stable-version=*)
-        ERGOGEN_STABLE_VERSION="${arg#*=}"
-        shift
-        ;;
-        --ergogen-snapshot-url=*)
-        ERGOGEN_SNAPSHOT_URL="${arg#*=}"
-        shift
-        ;;
-        --freerouting-stable-version=*)
-        FREEROUTING_STABLE_VERSION="${arg#*=}"
-        shift
-        ;;
-        --freerouting-snapshot-url=*)
-        FREEROUTING_SNAPSHOT_URL="${arg#*=}"
-        shift
-        ;;
-    esac
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --kicad-version=*)
+      KICAD_VERSION="${1#*=}"
+      ;;
+    --ergogen-stable-version=*)
+      ERGOGEN_STABLE_VERSION="${1#*=}"
+      ;;
+    --ergogen-snapshot-url=*)
+      ERGOGEN_SNAPSHOT_URL="${1#*=}"
+      ;;
+    --freerouting-stable-version=*)
+      FREEROUTING_STABLE_VERSION="${1#*=}"
+      ;;
+    --freerouting-snapshot-url=*)
+      FREEROUTING_SNAPSHOT_URL="${1#*=}"
+      ;;
+  esac
+  shift
 done
 
 if [ -z "${FREEROUTING_SNAPSHOT_URL}" ]; then
@@ -64,7 +59,7 @@ docker push ceoloide/ergogen-freerouting:latest
 
 # Build and push stable/snapshot
 docker build . \
-  --build-arg KICAD_VER=${KICAD_VERSION} \
+  --build-arg KICAD_VERSION=${KICAD_VERSION} \
   --build-arg ERGOGEN_VERSION=${ERGOGEN_STABLE_VERSION} \
   --build-arg FREEROUTING_VERSION=snapshot \
   --build-arg FREEROUTING_SNAPSHOT_URL=${FREEROUTING_SNAPSHOT_URL} \
@@ -73,7 +68,7 @@ docker push ceoloide/ergogen-freerouting:${ERGOGEN_STABLE_VERSION}_snapshot
 
 # Build and push snapshot/stable
 docker build . \
-  --build-arg KICAD_VER=${KICAD_VERSION} \
+  --build-arg KICAD_VERSION=${KICAD_VERSION} \
   --build-arg ERGOGEN_VERSION=snapshot \
   --build-arg ERGOGEN_SNAPSHOT_URL=${ERGOGEN_SNAPSHOT_URL} \
   --build-arg FREEROUTING_VERSION=${FREEROUTING_STABLE_VERSION} \
@@ -82,7 +77,7 @@ docker push ceoloide/ergogen-freerouting:snapshot_${FREEROUTING_STABLE_VERSION}
 
 # Build and push snapshot/snapshot
 docker build . \
-  --build-arg KICAD_VER=${KICAD_VERSION} \
+  --build-arg KICAD_VERSION=${KICAD_VERSION} \
   --build-arg ERGOGEN_VERSION=snapshot \
   --build-arg ERGOGEN_SNAPSHOT_URL=${ERGOGEN_SNAPSHOT_URL} \
   --build-arg FREEROUTING_VERSION=snapshot \
