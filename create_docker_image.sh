@@ -20,6 +20,10 @@ FREEROUTING_SNAPSHOT_URL=""
 for arg in "$@"
 do
     case $arg in
+        --kicad-version=*)
+        KICAD_VERSION="${arg#*=}"
+        shift
+        ;;
         --ergogen-stable-version=*)
         ERGOGEN_STABLE_VERSION="${arg#*=}"
         shift
@@ -50,7 +54,7 @@ fi
 
 # Build and push stable/stable
 docker build . \
-  --build-arg KICAD_VER=${KICAD_VERSION} \
+  --build-arg KICAD_VERSION=${KICAD_VERSION} \
   --build-arg ERGOGEN_VERSION=${ERGOGEN_STABLE_VERSION} \
   --build-arg FREEROUTING_VERSION=${FREEROUTING_STABLE_VERSION} \
   -t ceoloide/ergogen-freerouting:${ERGOGEN_STABLE_VERSION}_${FREEROUTING_STABLE_VERSION} \
