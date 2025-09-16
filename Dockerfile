@@ -7,7 +7,7 @@ LABEL Description="Minimal Docker image with Ergogen, Freerouting (2.1.0), and K
 ARG ERGOGEN_VERSION=snapshot
 ARG ERGOGEN_SNAPSHOT_URL=https://github.com/ergogen/ergogen#develop
 ARG FREEROUTING_VERSION=2.1.0
-ARG FREEROUTING_SNAPSHOT_URL=""
+ARG FREEROUTING_SNAPSHOT_URL="https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20250916_121300.jar"
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y --no-install-recommends nodejs npm wget curl
