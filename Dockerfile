@@ -1,13 +1,11 @@
 # Best practices documented at https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
-FROM ghcr.io/inti-cmnb/kicad${kicad_ver}_auto:latest
-
 ARG KICAD_VERSION=8
 ARG ERGOGEN_VERSION=snapshot
 ARG ERGOGEN_SNAPSHOT_URL=https://github.com/ceoloide/ergogen#bezier
 ARG FREEROUTING_VERSION=2.1.0
 ARG FREEROUTING_SNAPSHOT_URL="https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20250916_121300.jar"
 
-
+FROM ghcr.io/inti-cmnb/kicad${KICAD_VERSION}_auto:latest
 LABEL Description="Minimal Docker image with Ergogen (${ERGOGEN_VERSION}), Freerouting (${FREEROUTING_VERSION}), and KiCad ${KICAD_VERSION} with KiBot and other automation scripts" \
       Author="Marco Massarelli <marco.massarelli@gmail.com>"
 
