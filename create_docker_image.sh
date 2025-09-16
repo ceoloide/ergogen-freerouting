@@ -10,8 +10,9 @@ get_snapshot_url() {
   head -n 1
 }
 
-ERGOGEN_STABLE="4.1.0"
-FREEROUTING_STABLE_URL="https://github.com/freerouting/freerouting/releases/download/v2.1.0/freerouting-2.1.0.jar"
+ERGOGEN_STABLE_VERSION="4.1.0"
+ERGOGEN_SNAPSHOT_URL="https://github.com/ergogen/ergogen#develop"
+FREEROUTING_STABLE_VERSION="2.1.0"
 FREEROUTING_SNAPSHOT_URL=$(get_snapshot_url)
 
 if [ ! -f Dockerfile ]; then
@@ -21,30 +22,34 @@ fi
 
 # Build and push stable/stable
 docker build . \
-  --build-arg ERGOGEN_VERSION=${ERGOGEN_STABLE} \
-  --build-arg FREEROUTING_URL=${FREEROUTING_STABLE_URL} \
-  -t ceoloide/ergogen-freerouting:${ERGOGEN_STABLE}_2.1.0 \
+  --build-arg ERGOGEN_VERSION=${ERGOGEN_STABLE_VERSION} \
+  --build-arg FREEROUTING_VERSION=${FREEROUTING_STABLE_VERSION} \
+  -t ceoloide/ergogen-freerouting:${ERGOGEN_STABLE_VERSION}_${FREEROUTING_STABLE_VERSION} \
   -t ceoloide/ergogen-freerouting:latest
-docker push ceoloide/ergogen-freerouting:${ERGOGEN_STABLE}_2.1.0
+docker push ceoloide/ergogen-freerouting:${ERGOGEN_STABLE_VERSION}_${FREEROUTING_STABLE_VERSION}
 docker push ceoloide/ergogen-freerouting:latest
 
 # Build and push stable/snapshot
 docker build . \
-  --build-arg ERGOGEN_VERSION=${ERGOGEN_STABLE} \
-  --build-arg FREEROUTING_URL=${FREEROUTING_SNAPSHOT_URL} \
-  -t ceoloide/ergogen-freerouting:${ERGOGEN_STABLE}_snapshot
-docker push ceoloide/ergogen-freerouting:${ERGOGEN_STABLE}_snapshot
+  --build-arg ERGOGEN_VERSION=${ERGOGEN_STABLE_VERSION} \
+  --build-arg FREEROUTING_VERSION=snapshot \
+  --build-arg FREEROUTING_SNAPSHOT_URL=${FREEROUTING_SNAPSHOT_URL} \
+  -t ceoloide/ergogen-freerouting:${ERGOGEN_STABLE_VERSION}_snapshot
+docker push ceoloide/ergogen-freerouting:${ERGOGEN_STABLE_VERSION}_snapshot
 
 # Build and push snapshot/stable
 docker build . \
   --build-arg ERGOGEN_VERSION=snapshot \
-  --build-arg FREEROUTING_URL=${FREEROUTING_STABLE_URL} \
-  -t ceoloide/ergogen-freerouting:snapshot_2.1.0
-docker push ceoloide/ergogen-freerouting:snapshot_2.1.0
+  --build-arg ERGOGEN_SNAPSHOT_URL=${ERGOGEN_SNAPSHOT_URL} \
+  --build-arg FREEROUTING_VERSION=${FREEROUTING_STABLE_VERSION} \
+  -t ceoloide/ergogen-freerouting:snapshot_${FREEROUTING_STABLE_VERSION}
+docker push ceoloide/ergogen-freerouting:snapshot_${FREEROUTING_STABLE_VERSION}
 
 # Build and push snapshot/snapshot
 docker build . \
   --build-arg ERGOGEN_VERSION=snapshot \
-  --build-arg FREEROUTING_URL=${FREEROUTING_SNAPSHOT_URL} \
+  --build-arg ERGOGEN_SNAPSHOT_URL=${ERGOGEN_SNAPSHOT_URL} \
+  --build-arg FREEROUTING_VERSION=snapshot \
+  --build-arg FREEROUTING_SNAPSHOT_URL=${FREEROUTING_SNAPSHOT_URL} \
   -t ceoloide/ergogen-freerouting:snapshot
 docker push ceoloide/ergogen-freerouting:snapshot
