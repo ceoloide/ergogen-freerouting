@@ -32,8 +32,43 @@ While the `-rm` flag cleans up the image after running. Note that the output is 
 
 ## How to build
 
-To build the image locally you can run the following command:
+To build the images locally, you can use the `create_docker_image.sh` script. This script will build and push all the different image variants to Docker Hub.
 
 ```shell
-docker build . -t ergogen-freerouting
+./create_docker_image.sh
+```
+
+This will create the following images:
+- `ceoloide/ergogen-freerouting:4.1.0_2.1.0` (stable/stable)
+- `ceoloide/ergogen-freerouting:latest` (same as stable/stable)
+- `ceoloide/ergogen-freerouting:4.1.0_snapshot` (stable/snapshot)
+- `ceoloide/ergogen-freerouting:snapshot_2.1.0` (snapshot/stable)
+- `ceoloide/ergogen-freerouting:snapshot` (snapshot/snapshot)
+
+### Advanced build options
+
+You can also provide command-line arguments to the script to override the default versions and URLs:
+
+```shell
+./create_docker_image.sh \
+  --ergogen-stable-version=<version> \
+  --ergogen-snapshot-url=<url> \
+  --freerouting-stable-version=<version> \
+  --freerouting-snapshot-url=<url>
+```
+
+For example, to build with a different stable version of Ergogen:
+```shell
+./create_docker_image.sh --ergogen-stable-version=4.2.0
+```
+
+### Manual build
+
+If you want to build a single image manually, you can use the `docker build` command with build arguments. For example, to build an image with snapshot versions of both tools:
+
+```shell
+docker build . \
+  --build-arg ERGOGEN_VERSION=snapshot \
+  --build-arg FREEROUTING_VERSION=snapshot \
+  -t my-custom-image
 ```
