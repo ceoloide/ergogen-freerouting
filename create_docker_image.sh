@@ -42,6 +42,13 @@ if [ -z "${FREEROUTING_SNAPSHOT_URL}" ]; then
   FREEROUTING_SNAPSHOT_URL=$(get_snapshot_url)
 fi
 
+echo "Variables:"
+echo "KICAD_VERSION=${KICAD_VERSION}"
+echo "ERGOGEN_STABLE_VERSION=${ERGOGEN_STABLE_VERSION}"
+echo "ERGOGEN_SNAPSHOT_URL=${ERGOGEN_SNAPSHOT_URL}"
+echo "FREEROUTING_STABLE_VERSION=${FREEROUTING_STABLE_VERSION}"
+echo "FREEROUTING_SNAPSHOT_URL=${FREEROUTING_SNAPSHOT_URL}"
+
 if [ ! -f Dockerfile ]; then
   echo "Dockerfile not found in the folder."
   exit 1
