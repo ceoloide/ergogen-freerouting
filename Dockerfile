@@ -10,7 +10,7 @@ LABEL Description="Minimal Docker image with Ergogen (${ERGOGEN_VERSION}), Freer
       Author="Marco Massarelli <marco.massarelli@gmail.com>"
 
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y --no-install-recommends nodejs npm wget curl
+RUN apt-get install -y --no-install-recommends nodejs npm wget
 RUN if [ "${ERGOGEN_VERSION}" = "snapshot" ]; then \
   npm install -g ${ERGOGEN_SNAPSHOT_URL}; \
   else \
