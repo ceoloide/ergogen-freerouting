@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.description="Minimal Docker image with Ergogen ($
       org.opencontainers.image.authors="Marco Massarelli <marco.massarelli@gmail.com>"
 
 # Install Node.js, npm, wget, and clean cache in a single layer
-RUN apt-get update && apt-get upgrade -y && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends nodejs npm wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
