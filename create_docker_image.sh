@@ -95,15 +95,28 @@ if [ "${PUSH}" = "true" ]; then
 fi
 
 # Build snapshot/snapshot (dev / latest)
-docker build . \
-  --build-arg KICAD_VERSION="${KICAD_VERSION}" \
-  --build-arg ERGOGEN_VERSION=snapshot \
-  --build-arg ERGOGEN_SNAPSHOT_URL="${ERGOGEN_SNAPSHOT_URL}" \
-  --build-arg FREEROUTING_VERSION=snapshot \
-  --build-arg FREEROUTING_SNAPSHOT_URL="${FREEROUTING_SNAPSHOT_URL}" \
-  -t ceoloide/ergogen-freerouting:"k${KICAD_VERSION}_snapshot" \
-  -t ceoloide/ergogen-freerouting:latest
-if [ "${PUSH}" = "true" ]; then
-  docker push ceoloide/ergogen-freerouting:"k${KICAD_VERSION}_snapshot"
-  docker push ceoloide/ergogen-freerouting:latest
+if [ "${KICAD_VERSION}" = "9" ]; then
+  docker build . \
+    --build-arg KICAD_VERSION="${KICAD_VERSION}" \
+    --build-arg ERGOGEN_VERSION=snapshot \
+    --build-arg ERGOGEN_SNAPSHOT_URL="${ERGOGEN_SNAPSHOT_URL}" \
+    --build-arg FREEROUTING_VERSION=snapshot \
+    --build-arg FREEROUTING_SNAPSHOT_URL="${FREEROUTING_SNAPSHOT_URL}" \
+    -t ceoloide/ergogen-freerouting:"k${KICAD_VERSION}_snapshot" \
+    -t ceoloide/ergogen-freerouting:latest
+  if [ "${PUSH}" = "true" ]; then
+    docker push ceoloide/ergogen-freerouting:"k${KICAD_VERSION}_snapshot"
+    docker push ceoloide/ergogen-freerouting:latest
+  fi
+else
+  docker build . \
+    --build-arg KICAD_VERSION="${KICAD_VERSION}" \
+    --build-arg ERGOGEN_VERSION=snapshot \
+    --build-arg ERGOGEN_SNAPSHOT_URL="${ERGOGEN_SNAPSHOT_URL}" \
+    --build-arg FREEROUTING_VERSION=snapshot \
+    --build-arg FREEROUTING_SNAPSHOT_URL="${FREEROUTING_SNAPSHOT_URL}" \
+    -t ceoloide/ergogen-freerouting:"k${KICAD_VERSION}_snapshot"
+  if [ "${PUSH}" = "true" ]; then
+    docker push ceoloide/ergogen-freerouting:"k${KICAD_VERSION}_snapshot"
+  fi
 fi
