@@ -6,7 +6,7 @@ ARG KICAD_VERSION=8
 ARG ERGOGEN_VERSION=snapshot
 ARG ERGOGEN_SNAPSHOT_URL=https://github.com/ceoloide/ergogen#v4.3.0
 ARG FREEROUTING_VERSION=2.2.4
-ARG FREEROUTING_SNAPSHOT_URL="https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20250916_121300.jar"
+ARG FREEROUTING_SNAPSHOT_URL="https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20260702_193300.jar"
 
 LABEL org.opencontainers.image.description="Minimal Docker image with Ergogen (${ERGOGEN_VERSION}), Freerouting (${FREEROUTING_VERSION}), and KiCad ${KICAD_VERSION} with KiBot and other automation scripts" \
       org.opencontainers.image.authors="Marco Massarelli <marco.massarelli@gmail.com>"

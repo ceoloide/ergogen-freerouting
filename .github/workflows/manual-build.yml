@@ -21,7 +21,7 @@ on:
         required: false
       freerouting-snapshot-url:
         description: 'Freerouting Snapshot URL'
-        default: 'https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20250916_121300.jar'
+        default: 'https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20260702_193300.jar'
         required: false
 
 jobs:
