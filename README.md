@@ -4,7 +4,7 @@ A minimal Docker image to run [Ergogen](https://github.com/ergogen/ergogen) and 
 
 Prebuilt Docker images are available on [Docker Hub under ceoloide/ergogen-freerouting](https://hub.docker.com/repository/docker/ceoloide/ergogen-freerouting/general).
 
-The `:latest` tag is kept up to date with the latest development/snapshot (dev) releases of both Ergogen and Freerouting (the snapshot/snapshot variant). You can also refer to specific stable versions by referencing their tags, e.g. `:4.2.1_2.2.4`.
+The `:latest` tag is kept up to date with the latest development/snapshot (dev) releases of both Ergogen and Freerouting (the snapshot/snapshot variant, e.g., `:k9_snapshot`). You can also refer to specific stable versions by referencing their tags, e.g., `:k9_4.2.1_2.2.4` or `:k9_latest`.
 
 ## How to use the prebuilt Docker image
 
@@ -39,11 +39,12 @@ To build the images locally, you can use the `create_docker_image.sh` script. Th
 ```
 
 This will create the following images:
-- `ceoloide/ergogen-freerouting:4.2.1_2.2.4` (stable/stable)
-- `ceoloide/ergogen-freerouting:4.2.1_snapshot` (stable/snapshot)
-- `ceoloide/ergogen-freerouting:snapshot_2.2.4` (snapshot/stable)
-- `ceoloide/ergogen-freerouting:snapshot` (snapshot/snapshot)
-- `ceoloide/ergogen-freerouting:latest` (same as snapshot/snapshot)
+- `ceoloide/ergogen-freerouting:k9_4.2.1_2.2.4` (stable/stable)
+- `ceoloide/ergogen-freerouting:k9_latest` (latest stable combination)
+- `ceoloide/ergogen-freerouting:k9_4.2.1_snapshot` (stable/snapshot)
+- `ceoloide/ergogen-freerouting:k9_snapshot_2.2.4` (snapshot/stable)
+- `ceoloide/ergogen-freerouting:k9_snapshot` (snapshot/snapshot / dev)
+- `ceoloide/ergogen-freerouting:latest` (same as k9_snapshot / dev)
 
 ### Advanced build options
 
