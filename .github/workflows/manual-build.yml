@@ -9,15 +9,15 @@ on:
         required: false
       ergogen-stable-version:
         description: 'Ergogen Stable Version'
-        default: '4.1.0'
+        default: '4.2.1'
         required: false
       ergogen-snapshot-url:
         description: 'Ergogen Snapshot URL'
-        default: 'https://github.com/ergogen/ergogen#develop'
+        default: 'https://github.com/ceoloide/ergogen#v4.3.0'
         required: false
       freerouting-stable-version:
         description: 'Freerouting Stable Version'
-        default: '2.1.0'
+        default: '2.2.4'
         required: false
       freerouting-snapshot-url:
         description: 'Freerouting Snapshot URL'
@@ -45,4 +45,5 @@ jobs:
             --ergogen-stable-version=${{ github.event.inputs.ergogen-stable-version }} \
             --ergogen-snapshot-url=${{ github.event.inputs.ergogen-snapshot-url }} \
             --freerouting-stable-version=${{ github.event.inputs.freerouting-stable-version }} \
-            --freerouting-snapshot-url=${{ github.event.inputs.freerouting-snapshot-url }}
+            --freerouting-snapshot-url=${{ github.event.inputs.freerouting-snapshot-url }} \
+            --push

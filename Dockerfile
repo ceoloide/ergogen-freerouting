@@ -4,26 +4,38 @@ FROM ghcr.io/inti-cmnb/kicad${KICAD_VERSION}_auto:latest
 
 ARG KICAD_VERSION=8
 ARG ERGOGEN_VERSION=snapshot
-ARG ERGOGEN_SNAPSHOT_URL=https://github.com/ceoloide/ergogen#bezier
-ARG FREEROUTING_VERSION=2.1.0
+ARG ERGOGEN_SNAPSHOT_URL=https://github.com/ceoloide/ergogen#v4.3.0
+ARG FREEROUTING_VERSION=2.2.4
 ARG FREEROUTING_SNAPSHOT_URL="https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20250916_121300.jar"
-LABEL Description="Minimal Docker image with Ergogen (${ERGOGEN_VERSION}), Freerouting (${FREEROUTING_VERSION}), and KiCad ${KICAD_VERSION} with KiBot and other automation scripts" \
-      Author="Marco Massarelli <marco.massarelli@gmail.com>"
 
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y --no-install-recommends nodejs npm wget
+LABEL org.opencontainers.image.description="Minimal Docker image with Ergogen (${ERGOGEN_VERSION}), Freerouting (${FREEROUTING_VERSION}), and KiCad ${KICAD_VERSION} with KiBot and other automation scripts" \
+      org.opencontainers.image.authors="Marco Massarelli <marco.massarelli@gmail.com>"
+
+# Install Node.js, npm, wget, and clean cache in a single layer
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends nodejs npm wget && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Ergogen and clean npm cache
 RUN if [ "${ERGOGEN_VERSION}" = "snapshot" ]; then \
-  npm install -g ${ERGOGEN_SNAPSHOT_URL}; \
-  else \
-  npm install -g ergogen@${ERGOGEN_VERSION}; \
-  fi
+      npm install -g "${ERGOGEN_SNAPSHOT_URL}"; \
+    else \
+      npm install -g ergogen@"${ERGOGEN_VERSION}"; \
+    fi && \
+    npm cache clean --force
 
-RUN wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb && \
-  dpkg -i jdk-21_linux-x64_bin.deb
+# Download and install JDK 25, resolve dependencies, and remove installer
+RUN wget -q https://download.oracle.com/java/25/latest/jdk-25_linux-x64_bin.deb && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends ./jdk-25_linux-x64_bin.deb && \
+    rm jdk-25_linux-x64_bin.deb && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Download Freerouting Jar
 RUN if [ "${FREEROUTING_VERSION}" = "snapshot" ]; then \
-  wget ${FREEROUTING_SNAPSHOT_URL} -O /opt/freerouting.jar; \
-  else \
-  wget https://github.com/freerouting/freerouting/releases/download/v${FREEROUTING_VERSION}/freerouting-${FREEROUTING_VERSION}.jar -O /opt/freerouting.jar; \
-  fi
-RUN apt-get -y autoremove && \
-	rm -rf /var/lib/apt/lists/* /var/cache/debconf/templates.dat-old /var/lib/dpkg/status-old
+      wget -q "${FREEROUTING_SNAPSHOT_URL}" -O /opt/freerouting.jar; \
+    else \
+      wget -q "https://github.com/freerouting/freerouting/releases/download/v${FREEROUTING_VERSION}/freerouting-${FREEROUTING_VERSION}.jar" -O /opt/freerouting.jar; \
+    fi
