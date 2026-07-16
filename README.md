@@ -10,7 +10,7 @@ The `:latest` tag is kept up to date with the latest development/snapshot (dev) 
 
 If you don't want to build your own local image, you can use the [one hosted on Docker Hub](https://hub.docker.com/layers/ceoloide/ergogen-freerouting/latest/images/sha256-ba6fcdafcf791fa4d8efb2ee2bcf6141a49756598357a332720adc85c9b0b107?context=explore).
 
-The image is based on ghcr.io/inti-cmnb/kicad8_auto, ergogen is installed as a global NPM package, and Freerouting is located here:
+The image is based on ghcr.io/inti-cmnb/kicad9_auto, ergogen is installed as a global NPM package, and Freerouting is located here:
 
 ```shell
 /opt/freerouting.jar

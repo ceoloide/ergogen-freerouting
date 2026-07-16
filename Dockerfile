@@ -1,8 +1,8 @@
 # Best practices documented at https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
-ARG KICAD_VERSION=8
+ARG KICAD_VERSION=9
 FROM ghcr.io/inti-cmnb/kicad${KICAD_VERSION}_auto:latest
 
-ARG KICAD_VERSION=8
+ARG KICAD_VERSION=9
 ARG ERGOGEN_VERSION=snapshot
 ARG ERGOGEN_SNAPSHOT_URL=https://github.com/ceoloide/ergogen#v4.3.0
 ARG FREEROUTING_VERSION=2.2.4

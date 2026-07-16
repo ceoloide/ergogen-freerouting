@@ -11,7 +11,7 @@ get_snapshot_url() {
   head -n 1
 }
 
-KICAD_VERSION="8"
+KICAD_VERSION="9"
 ERGOGEN_STABLE_VERSION="4.2.1"
 ERGOGEN_SNAPSHOT_URL="https://github.com/ceoloide/ergogen#v4.3.0"
 FREEROUTING_STABLE_VERSION="2.2.4"

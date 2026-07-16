@@ -5,7 +5,7 @@ on:
     inputs:
       kicad-version:
         description: 'KiCad Version'
-        default: '8'
+        default: '9'
         required: false
       ergogen-stable-version:
         description: 'Ergogen Stable Version'
