@@ -17,11 +17,11 @@ on:
         required: false
       freerouting-stable-version:
         description: 'Freerouting Stable Version'
-        default: '2.4.1'
+        default: '2.5.0'
         required: false
       freerouting-snapshot-url:
         description: 'Freerouting Snapshot URL'
-        default: 'https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20260903_142900.jar'
+        default: 'https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20261005_154500.jar'
         required: false
 
 jobs:
