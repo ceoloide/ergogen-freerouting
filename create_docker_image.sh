@@ -1,21 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-# Function to get the latest snapshot URL
-get_snapshot_url() {
-  curl -s -H "Accept: application/vnd.github.v3+json" \
-  "https://api.github.com/repos/freerouting/freerouting/releases/tags/SNAPSHOT" | \
-  grep "browser_download_url" | \
-  grep "\.jar\"" | \
-  cut -d '"' -f 4 | \
-  head -n 1
-}
-
 KICAD_VERSION="9"
 ERGOGEN_STABLE_VERSION="4.2.1"
 ERGOGEN_SNAPSHOT_URL="https://github.com/ceoloide/ergogen#v4.3.0"
 FREEROUTING_STABLE_VERSION="2.5.0"
-FREEROUTING_SNAPSHOT_URL=""
+FREEROUTING_SNAPSHOT_URL="https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20261020_121300.jar"
 PUSH="false"
 
 # Parse command-line arguments
@@ -42,10 +32,6 @@ while [ "$#" -gt 0 ]; do
   esac
   shift
 done
-
-if [ -z "${FREEROUTING_SNAPSHOT_URL}" ]; then
-  FREEROUTING_SNAPSHOT_URL=$(get_snapshot_url)
-fi
 
 echo "Variables:"
 echo "KICAD_VERSION=${KICAD_VERSION}"

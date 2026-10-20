@@ -6,6 +6,24 @@ Prebuilt Docker images are available on [Docker Hub under ceoloide/ergogen-freer
 
 The `:latest` tag is kept up to date with the latest development/snapshot (dev) releases of both Ergogen and Freerouting (the snapshot/snapshot variant, e.g., `:k9_snapshot`). You can also refer to specific stable versions by referencing their tags, e.g., `:k9_4.2.1_2.5.0` or `:k9_latest`.
 
+## Temporary Freerouting snapshot images
+
+The fixed `20261020_121300` artifact contains Freerouting **2.5.1-SNAPSHOT**
+from upstream revision `c4755a88`. The corresponding KiCad 9 images are:
+
+- `ceoloide/ergogen-freerouting:k9_snapshot_20261020_121300` — snapshot Ergogen
+  (`ceoloide/ergogen#v4.3.0`); used by Corney Island's local build and CI.
+- `ceoloide/ergogen-freerouting:k9_4.2.1_snapshot_20261020_121300` — stable Ergogen 4.2.1.
+
+They bundle Java 25 and run Freerouting from `/opt/freerouting.jar`. The shorter
+`k9_snapshot`, `latest`, and `k9_4.2.1_snapshot` tags are also updated when these
+images are published. Corney Island uses the dated tag while the upstream
+routing fixes are being developed.
+
+The Dockerfile, build script, and manual workflow use the fixed snapshot URL;
+they do not query GitHub to select a newer artifact. Override the URL explicitly
+when adopting another snapshot.
+
 ## How to use the prebuilt Docker image
 
 If you don't want to build your own local image, you can use the [one hosted on Docker Hub](https://hub.docker.com/layers/ceoloide/ergogen-freerouting/latest/images/sha256-ba6fcdafcf791fa4d8efb2ee2bcf6141a49756598357a332720adc85c9b0b107?context=explore).
@@ -32,10 +50,12 @@ While the `-rm` flag cleans up the image after running. Note that the output is 
 
 ## How to build
 
-To build the images locally, you can use the `create_docker_image.sh` script. This script will build and push all the different image variants to Docker Hub.
+To build the images locally, you can use the `create_docker_image.sh` script. This script builds all image variants locally. Add `--push` to publish them to Docker Hub.
 
 ```shell
 ./create_docker_image.sh
+# Publish the built variants:
+./create_docker_image.sh --push
 ```
 
 This will create the following images:
@@ -109,3 +129,17 @@ For the workflow to be able to push images to Docker Hub, it needs to be authent
         **Value:** The access token you copied from Docker Hub.
 
 Once these secrets are configured, the workflow will be able to log in to Docker Hub and push the images.
+
+### Reproduce the dated Corney Island image
+
+```shell
+docker build . \
+  --build-arg KICAD_VERSION=9 \
+  --build-arg ERGOGEN_VERSION=snapshot \
+  --build-arg FREEROUTING_VERSION=snapshot \
+  -t ceoloide/ergogen-freerouting:k9_snapshot_20261020_121300
+```
+
+Use `--build-arg ERGOGEN_VERSION=4.2.1` and tag
+`k9_4.2.1_snapshot_20261020_121300` for the stable Ergogen variant. Validate the
+embedded tool versions before publishing with `docker push`.
