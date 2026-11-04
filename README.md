@@ -4,25 +4,28 @@ A minimal Docker image to run [Ergogen](https://github.com/ergogen/ergogen) and 
 
 Prebuilt Docker images are available on [Docker Hub under ceoloide/ergogen-freerouting](https://hub.docker.com/repository/docker/ceoloide/ergogen-freerouting/general).
 
-The `:latest` tag is kept up to date with the latest development/snapshot (dev) releases of both Ergogen and Freerouting (the snapshot/snapshot variant, e.g., `:k9_snapshot`). You can also refer to specific stable versions by referencing their tags, e.g., `:k9_4.2.1_2.5.0` or `:k9_latest`.
+The `:dev` tag is kept up to date with the latest development/snapshot releases of both Ergogen and Freerouting on KiCad 9 (the snapshot/snapshot variant, `:k9_snapshot`). You can also refer to specific stable versions by referencing their tags, e.g., `:k9_4.2.1_2.5.0` or `:k9_latest`.
 
 ## Temporary Freerouting snapshot images
 
-The fixed `20261020_121300` artifact contains Freerouting **2.5.1-SNAPSHOT**
-from upstream revision `c4755a88`. The corresponding KiCad 9 images are:
+The `20261103_230100` snapshot build contains Freerouting **2.5.1-SNAPSHOT**
+from upstream revision `ceb56c6f` (copied from pinned
+`ghcr.io/freerouting/freerouting:nightly@sha256:b7c4223089549082ba1ff1588858665690e652e27b5d230ddc1548de7d77fb6d`).
+The corresponding KiCad 9 images are:
 
-- `ceoloide/ergogen-freerouting:k9_snapshot_20261020_121300` — snapshot Ergogen
-  (`ceoloide/ergogen#v4.3.0`); used by Corney Island's local build and CI.
-- `ceoloide/ergogen-freerouting:k9_4.2.1_snapshot_20261020_121300` — stable Ergogen 4.2.1.
+- `ceoloide/ergogen-freerouting:k9_snapshot_20261103_230100` — snapshot Ergogen
+  (`ceoloide/ergogen#v4.3.0`); also published as `:k9_snapshot` and `:dev`.
+- `ceoloide/ergogen-freerouting:k9_4.2.1_snapshot_20261103_230100` — stable Ergogen 4.2.1;
+  also published as `:k9_4.2.1_snapshot`.
 
-They bundle Java 25 and run Freerouting from `/opt/freerouting.jar`. The shorter
-`k9_snapshot`, `latest`, and `k9_4.2.1_snapshot` tags are also updated when these
-images are published. Corney Island uses the dated tag while the upstream
-routing fixes are being developed.
+They bundle Java 25 and run Freerouting from `/opt/freerouting.jar`. The
+`k9_snapshot`, `dev`, and `k9_4.2.1_snapshot` tags are updated when these
+snapshot images are published, while `:latest` is left untouched.
 
-The Dockerfile, build script, and manual workflow use the fixed snapshot URL;
-they do not query GitHub to select a newer artifact. Override the URL explicitly
-when adopting another snapshot.
+The Dockerfile, build script, and manual workflow use the pinned GHCR nightly
+image digest by default when `FREEROUTING_SNAPSHOT_URL` is empty; override
+`FREEROUTING_SNAPSHOT_IMAGE` or `FREEROUTING_SNAPSHOT_URL` explicitly when
+adopting another snapshot.
 
 ## How to use the prebuilt Docker image
 
@@ -64,7 +67,7 @@ This will create the following images:
 - `ceoloide/ergogen-freerouting:k9_4.2.1_snapshot` (stable/snapshot)
 - `ceoloide/ergogen-freerouting:k9_snapshot_2.5.0` (snapshot/stable)
 - `ceoloide/ergogen-freerouting:k9_snapshot` (snapshot/snapshot / dev)
-- `ceoloide/ergogen-freerouting:latest` (same as k9_snapshot / dev)
+- `ceoloide/ergogen-freerouting:dev` (same as k9_snapshot / dev)
 
 ### Advanced build options
 
@@ -75,6 +78,7 @@ You can also provide command-line arguments to the script to override the defaul
   --ergogen-stable-version=<version> \
   --ergogen-snapshot-url=<url> \
   --freerouting-stable-version=<version> \
+  --freerouting-snapshot-image=<image> \
   --freerouting-snapshot-url=<url>
 ```
 
@@ -137,9 +141,9 @@ docker build . \
   --build-arg KICAD_VERSION=9 \
   --build-arg ERGOGEN_VERSION=snapshot \
   --build-arg FREEROUTING_VERSION=snapshot \
-  -t ceoloide/ergogen-freerouting:k9_snapshot_20261020_121300
+  -t ceoloide/ergogen-freerouting:k9_snapshot_20261103_230100
 ```
 
 Use `--build-arg ERGOGEN_VERSION=4.2.1` and tag
-`k9_4.2.1_snapshot_20261020_121300` for the stable Ergogen variant. Validate the
+`k9_4.2.1_snapshot_20261103_230100` for the stable Ergogen variant. Validate the
 embedded tool versions before publishing with `docker push`.

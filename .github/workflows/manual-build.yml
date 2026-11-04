@@ -19,9 +19,13 @@ on:
         description: 'Freerouting Stable Version'
         default: '2.5.0'
         required: false
+      freerouting-snapshot-image:
+        description: 'Freerouting Snapshot GHCR Image'
+        default: 'ghcr.io/freerouting/freerouting:nightly@sha256:b7c4223089549082ba1ff1588858665690e652e27b5d230ddc1548de7d77fb6d'
+        required: false
       freerouting-snapshot-url:
-        description: 'Freerouting Snapshot URL'
-        default: 'https://github.com/freerouting/freerouting/releases/download/SNAPSHOT/freerouting-SNAPSHOT-20261020_121300.jar'
+        description: 'Freerouting Snapshot URL (optional override)'
+        default: ''
         required: false
 
 jobs:
@@ -45,5 +49,6 @@ jobs:
             --ergogen-stable-version=${{ github.event.inputs.ergogen-stable-version }} \
             --ergogen-snapshot-url=${{ github.event.inputs.ergogen-snapshot-url }} \
             --freerouting-stable-version=${{ github.event.inputs.freerouting-stable-version }} \
+            --freerouting-snapshot-image=${{ github.event.inputs.freerouting-snapshot-image }} \
             --freerouting-snapshot-url=${{ github.event.inputs.freerouting-snapshot-url }} \
             --push
