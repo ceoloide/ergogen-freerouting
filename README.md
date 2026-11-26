@@ -4,34 +4,41 @@ A minimal Docker image to run [Ergogen](https://github.com/ergogen/ergogen) and 
 
 Prebuilt Docker images are available on [Docker Hub under ceoloide/ergogen-freerouting](https://hub.docker.com/repository/docker/ceoloide/ergogen-freerouting/general).
 
-The `:dev` tag is kept up to date with the latest development/snapshot releases of both Ergogen and Freerouting on KiCad 9 (the snapshot/snapshot variant, `:k9_snapshot`). You can also refer to specific stable versions by referencing their tags, e.g., `:k9_4.2.1_2.5.0` or `:k9_latest`.
+## Image tags
 
-## Temporary Freerouting snapshot images
+Versioned tags follow `k<KiCad>_e<Ergogen>_f<Freerouting>`. Ergogen
+development builds add the commit they were built from, e.g. `e4.3.0-568d7ae`
+is the head of the [`v4.3.0` branch of ceoloide/ergogen](https://github.com/ceoloide/ergogen/tree/v4.3.0)
+at commit `568d7ae`.
 
-The `20261103_230100` snapshot build contains Freerouting **2.5.1-SNAPSHOT**
-from upstream revision `ceb56c6f` (copied from pinned
-`ghcr.io/freerouting/freerouting:nightly@sha256:b7c4223089549082ba1ff1588858665690e652e27b5d230ddc1548de7d77fb6d`).
-The corresponding KiCad 9 images are:
+| Tag | KiCad | Ergogen | Freerouting |
+|---|---|---|---|
+| `k10_e4.2.1_f2.6.0` | 10.0.4 | 4.2.1 | 2.6.0 |
+| `k9_e4.2.1_f2.6.0` | 9.0.7 | 4.2.1 | 2.6.0 |
+| `k10_e4.3.0-568d7ae_f2.6.0` | 10.0.4 | 4.3.0 (`568d7ae`) | 2.6.0 |
+| `k9_e4.3.0-568d7ae_f2.6.0` | 9.0.7 | 4.3.0 (`568d7ae`) | 2.6.0 |
 
-- `ceoloide/ergogen-freerouting:k9_snapshot_20261103_230100` — snapshot Ergogen
-  (`ceoloide/ergogen#v4.3.0`); also published as `:k9_snapshot` and `:dev`.
-- `ceoloide/ergogen-freerouting:k9_4.2.1_snapshot_20261103_230100` — stable Ergogen 4.2.1;
-  also published as `:k9_4.2.1_snapshot`.
+Moving tags:
 
-They bundle Java 25 and run Freerouting from `/opt/freerouting.jar`. The
-`k9_snapshot`, `dev`, and `k9_4.2.1_snapshot` tags are updated when these
-snapshot images are published, while `:latest` is left untouched.
+| Tag | Points to |
+|---|---|
+| `stable` | `k10_e4.2.1_f2.6.0` (latest Ergogen release) |
+| `latest`, `k10_latest` | `k10_e4.3.0-568d7ae_f2.6.0` |
+| `k9_latest`, `dev` | `k9_e4.3.0-568d7ae_f2.6.0` |
 
-The Dockerfile, build script, and manual workflow use the pinned GHCR nightly
-image digest by default when `FREEROUTING_SNAPSHOT_URL` is empty; override
-`FREEROUTING_SNAPSHOT_IMAGE` or `FREEROUTING_SNAPSHOT_URL` explicitly when
-adopting another snapshot.
+All images include KiBot 1.9.1, Node.js 24 and Java 25. Older tags (Freerouting
+2.5.0 and earlier, and Freerouting snapshot builds) remain on Docker Hub but are
+no longer updated.
 
 ## How to use the prebuilt Docker image
 
-If you don't want to build your own local image, you can use the [one hosted on Docker Hub](https://hub.docker.com/layers/ceoloide/ergogen-freerouting/latest/images/sha256-ba6fcdafcf791fa4d8efb2ee2bcf6141a49756598357a332720adc85c9b0b107?context=explore).
+If you don't want to build your own local image, you can use the [one hosted on Docker Hub](https://hub.docker.com/repository/docker/ceoloide/ergogen-freerouting/general), for example:
 
-The image is based on ghcr.io/inti-cmnb/kicad9_auto, ergogen is installed as a global NPM package, and Freerouting is located here:
+```shell
+docker run --rm -v $(pwd):/tmp/ergogen -w /tmp/ergogen ceoloide/ergogen-freerouting:stable ergogen .
+```
+
+The image is based on `ghcr.io/inti-cmnb/kicad<version>_auto`, Ergogen is installed as a global NPM package, and Freerouting is located here:
 
 ```shell
 /opt/freerouting.jar
@@ -49,7 +56,7 @@ The same directory is selected as the working directory inside the Docker image 
 -w /tmp/ergogen
 ```
 
-While the `-rm` flag cleans up the image after running. Note that the output is created in your local directory and will remain available after Docker completes the run.
+While the `--rm` flag cleans up the container after running. Note that the output is created in your local directory and will remain available after Docker completes the run.
 
 ## How to build
 
@@ -61,13 +68,17 @@ To build the images locally, you can use the `create_docker_image.sh` script. Th
 ./create_docker_image.sh --push
 ```
 
-This will create the following images:
-- `ceoloide/ergogen-freerouting:k9_4.2.1_2.5.0` (stable/stable)
-- `ceoloide/ergogen-freerouting:k9_latest` (latest stable combination)
-- `ceoloide/ergogen-freerouting:k9_4.2.1_snapshot` (stable/snapshot)
-- `ceoloide/ergogen-freerouting:k9_snapshot_2.5.0` (snapshot/stable)
-- `ceoloide/ergogen-freerouting:k9_snapshot` (snapshot/snapshot / dev)
-- `ceoloide/ergogen-freerouting:dev` (same as k9_snapshot / dev)
+For each KiCad version (9 and 10 by default) it builds two images, and applies
+the moving tags listed above:
+
+- `k<KiCad>_e<Ergogen stable>_f<Freerouting>`, e.g. `k10_e4.2.1_f2.6.0`
+- `k<KiCad>_e<Ergogen snapshot>-<commit>_f<Freerouting>`, e.g. `k10_e4.3.0-568d7ae_f2.6.0`
+
+The Ergogen snapshot URL may point at a branch: the script resolves it to the
+branch's current head commit, installs that commit, and puts it in the tag.
+
+KiCad 9 builds use the `1.9.1-1_k9.0.7_d13.2` base image because
+`kicad9_auto:latest` currently points at a missing amd64 image upstream.
 
 ### Advanced build options
 
@@ -75,28 +86,39 @@ You can also provide command-line arguments to the script to override the defaul
 
 ```shell
 ./create_docker_image.sh \
+  --kicad-versions="9 10" \
+  --kicad9-base-tag=<kicad9_auto tag> \
+  --kicad10-base-tag=<kicad10_auto tag> \
   --ergogen-stable-version=<version> \
-  --ergogen-snapshot-url=<url> \
-  --freerouting-stable-version=<version> \
-  --freerouting-snapshot-image=<image> \
-  --freerouting-snapshot-url=<url>
+  --ergogen-snapshot-url=<git url>#<branch or commit> \
+  --ergogen-snapshot-version=<version label> \
+  --freerouting-version=<version>
 ```
 
-For example, to build with a different stable version of Ergogen:
+For example, to build only KiCad 10 images with a different stable version of Ergogen:
 ```shell
-./create_docker_image.sh --ergogen-stable-version=4.2.0
+./create_docker_image.sh --kicad-versions=10 --ergogen-stable-version=4.2.0
 ```
 
 ### Manual build
 
-If you want to build a single image manually, you can use the `docker build` command with build arguments. For example, to build an image with snapshot versions of both tools:
+If you want to build a single image manually, you can use the `docker build` command with build arguments. For example, to reproduce `k10_e4.3.0-568d7ae_f2.6.0`:
 
 ```shell
 docker build . \
+  --build-arg KICAD_VERSION=10 \
   --build-arg ERGOGEN_VERSION=snapshot \
-  --build-arg FREEROUTING_VERSION=snapshot \
+  --build-arg ERGOGEN_SNAPSHOT_URL=https://github.com/ceoloide/ergogen#568d7ae684ca914f8d200dd773b7fc26373a546e \
+  --build-arg FREEROUTING_VERSION=2.6.0 \
   -t my-custom-image
 ```
+
+For KiCad 9, also pass `--build-arg KICAD_BASE_TAG=1.9.1-1_k9.0.7_d13.2`.
+
+To use a Freerouting development build, set `FREEROUTING_VERSION=snapshot`
+and pass either a nightly image with `--build-arg FREEROUTING_SNAPSHOT_IMAGE=ghcr.io/freerouting/freerouting:nightly@sha256:<digest>`
+or a jar with `--build-arg FREEROUTING_SNAPSHOT_URL=<url>`. Pin nightly images
+by digest; old nightlies are deleted from GHCR.
 
 ## Automated Workflow
 
@@ -133,17 +155,3 @@ For the workflow to be able to push images to Docker Hub, it needs to be authent
         **Value:** The access token you copied from Docker Hub.
 
 Once these secrets are configured, the workflow will be able to log in to Docker Hub and push the images.
-
-### Reproduce the dated Corney Island image
-
-```shell
-docker build . \
-  --build-arg KICAD_VERSION=9 \
-  --build-arg ERGOGEN_VERSION=snapshot \
-  --build-arg FREEROUTING_VERSION=snapshot \
-  -t ceoloide/ergogen-freerouting:k9_snapshot_20261103_230100
-```
-
-Use `--build-arg ERGOGEN_VERSION=4.2.1` and tag
-`k9_4.2.1_snapshot_20261103_230100` for the stable Ergogen variant. Validate the
-embedded tool versions before publishing with `docker push`.
