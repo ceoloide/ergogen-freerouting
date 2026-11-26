@@ -3,29 +3,33 @@ name: Manual Docker Build
 on:
   workflow_dispatch:
     inputs:
-      kicad-version:
-        description: 'KiCad Version'
-        default: '9'
+      kicad-versions:
+        description: 'KiCad versions to build (space separated)'
+        default: '9 10'
+        required: false
+      kicad9-base-tag:
+        description: 'ghcr.io/inti-cmnb/kicad9_auto tag'
+        default: '1.9.1-1_k9.0.7_d13.2'
+        required: false
+      kicad10-base-tag:
+        description: 'ghcr.io/inti-cmnb/kicad10_auto tag'
+        default: 'latest'
         required: false
       ergogen-stable-version:
         description: 'Ergogen Stable Version'
         default: '4.2.1'
         required: false
       ergogen-snapshot-url:
-        description: 'Ergogen Snapshot URL'
+        description: 'Ergogen Snapshot URL (branches are pinned to their head commit)'
         default: 'https://github.com/ceoloide/ergogen#v4.3.0'
         required: false
-      freerouting-stable-version:
-        description: 'Freerouting Stable Version'
-        default: '2.5.0'
+      ergogen-snapshot-version:
+        description: 'Ergogen Snapshot Version (tag label, the commit is appended)'
+        default: '4.3.0'
         required: false
-      freerouting-snapshot-image:
-        description: 'Freerouting Snapshot GHCR Image'
-        default: 'ghcr.io/freerouting/freerouting:nightly@sha256:b7c4223089549082ba1ff1588858665690e652e27b5d230ddc1548de7d77fb6d'
-        required: false
-      freerouting-snapshot-url:
-        description: 'Freerouting Snapshot URL (optional override)'
-        default: ''
+      freerouting-version:
+        description: 'Freerouting Version'
+        default: '2.6.0'
         required: false
 
 jobs:
@@ -42,13 +46,22 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Run docker build script
+        env:
+          KICAD_VERSIONS: ${{ github.event.inputs.kicad-versions }}
+          KICAD9_BASE_TAG: ${{ github.event.inputs.kicad9-base-tag }}
+          KICAD10_BASE_TAG: ${{ github.event.inputs.kicad10-base-tag }}
+          ERGOGEN_STABLE_VERSION: ${{ github.event.inputs.ergogen-stable-version }}
+          ERGOGEN_SNAPSHOT_URL: ${{ github.event.inputs.ergogen-snapshot-url }}
+          ERGOGEN_SNAPSHOT_VERSION: ${{ github.event.inputs.ergogen-snapshot-version }}
+          FREEROUTING_VERSION: ${{ github.event.inputs.freerouting-version }}
         run: |
           chmod +x create_docker_image.sh
           ./create_docker_image.sh \
-            --kicad-version=${{ github.event.inputs.kicad-version }} \
-            --ergogen-stable-version=${{ github.event.inputs.ergogen-stable-version }} \
-            --ergogen-snapshot-url=${{ github.event.inputs.ergogen-snapshot-url }} \
-            --freerouting-stable-version=${{ github.event.inputs.freerouting-stable-version }} \
-            --freerouting-snapshot-image=${{ github.event.inputs.freerouting-snapshot-image }} \
-            --freerouting-snapshot-url=${{ github.event.inputs.freerouting-snapshot-url }} \
+            --kicad-versions="${KICAD_VERSIONS}" \
+            --kicad9-base-tag="${KICAD9_BASE_TAG}" \
+            --kicad10-base-tag="${KICAD10_BASE_TAG}" \
+            --ergogen-stable-version="${ERGOGEN_STABLE_VERSION}" \
+            --ergogen-snapshot-url="${ERGOGEN_SNAPSHOT_URL}" \
+            --ergogen-snapshot-version="${ERGOGEN_SNAPSHOT_VERSION}" \
+            --freerouting-version="${FREEROUTING_VERSION}" \
             --push
